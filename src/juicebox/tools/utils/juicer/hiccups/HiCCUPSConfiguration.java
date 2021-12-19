@@ -24,10 +24,10 @@
 
 package juicebox.tools.utils.juicer.hiccups;
 
-import juicebox.data.HiCFileTools;
+import javastraw.reader.type.HiCZoom;
+import javastraw.tools.HiCFileTools;
 import juicebox.tools.clt.CommandLineParserForJuicer;
 import juicebox.tools.utils.common.ArrayTools;
-import juicebox.windowui.HiCZoom;
 
 import java.text.DecimalFormat;
 import java.util.*;

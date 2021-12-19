@@ -24,8 +24,8 @@
 
 package juicebox.tools.utils.juicer.apa;
 
+import javastraw.tools.HiCFileTools;
 import juicebox.HiCGlobals;
-import juicebox.data.HiCFileTools;
 import juicebox.tools.utils.common.MatrixTools;
 import org.apache.commons.math.linear.RealMatrix;
 

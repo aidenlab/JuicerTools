@@ -24,23 +24,22 @@
 
 package juicebox.tools.clt.juicer;
 
-import juicebox.data.ChromosomeHandler;
-import juicebox.data.Dataset;
-import juicebox.data.HiCFileTools;
+import javastraw.feature2D.Feature2DList;
+import javastraw.feature2D.Feature2DParser;
+import javastraw.reader.Dataset;
+import javastraw.reader.basics.ChromosomeHandler;
+import javastraw.reader.type.HiCZoom;
+import javastraw.reader.type.NormalizationHandler;
+import javastraw.reader.type.NormalizationType;
+import javastraw.tools.HiCFileTools;
+import juicebox.data.Feature2DTools;
 import juicebox.tools.clt.CommandLineParserForJuicer;
 import juicebox.tools.clt.JuicerCLT;
 import juicebox.tools.utils.juicer.hiccups.HiCCUPSConfiguration;
 import juicebox.tools.utils.juicer.hiccups.HiCCUPSUtils;
-import juicebox.track.feature.Feature2DList;
-import juicebox.track.feature.Feature2DParser;
-import juicebox.track.feature.Feature2DTools;
-import juicebox.windowui.HiCZoom;
-import juicebox.windowui.NormalizationHandler;
-import juicebox.windowui.NormalizationType;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -92,8 +91,8 @@ public class HiCCUPSDiff extends JuicerCLT {
 
         outputDirectory = HiCFileTools.createValidDirectory(args[5]);
 
-        Dataset ds1 = HiCFileTools.extractDatasetForCLT(Arrays.asList(args[1].split("\\+")), true);
-        Dataset ds2 = HiCFileTools.extractDatasetForCLT(Arrays.asList(args[2].split("\\+")), true);
+        Dataset ds1 = HiCFileTools.extractDatasetForCLT(args[1], true, false);
+        Dataset ds2 = HiCFileTools.extractDatasetForCLT(args[2], true, false);
 
         if (!(ds1.getGenomeId().equals(ds2.getGenomeId()))) {
             System.err.println("Hi-C maps must be from the same genome");

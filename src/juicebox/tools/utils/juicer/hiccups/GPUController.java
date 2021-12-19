@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2011-2020 Broad Institute, Aiden Lab, Rice University, Baylor College of Medicine
+ * Copyright (c) 2011-2021 Broad Institute, Aiden Lab, Rice University, Baylor College of Medicine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -15,7 +15,7 @@
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -27,18 +27,17 @@ package juicebox.tools.utils.juicer.hiccups;
 
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Floats;
+import javastraw.reader.mzd.MatrixZoomData;
+import javastraw.reader.type.HiCZoom;
+import javastraw.reader.type.NormalizationType;
+import javastraw.tools.HiCFileTools;
 import jcuda.Pointer;
 import jcuda.Sizeof;
 import jcuda.driver.CUdeviceptr;
 import jcuda.utils.KernelLauncher;
-import juicebox.data.HiCFileTools;
-import juicebox.data.MatrixZoomData;
 import juicebox.tools.clt.juicer.HiCCUPS;
-import juicebox.tools.clt.juicer.HiCCUPSRegionHandler;
 import juicebox.tools.utils.common.ArrayTools;
 import juicebox.tools.utils.common.MatrixTools;
-import juicebox.windowui.HiCZoom;
-import juicebox.windowui.NormalizationType;
 import org.apache.commons.math.linear.RealMatrix;
 
 import java.io.BufferedReader;

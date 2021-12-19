@@ -24,23 +24,25 @@
 
 package juicebox.tools.clt.juicer;
 
-import juicebox.HiC;
+import javastraw.feature2D.Feature2DList;
+import javastraw.feature2D.Feature2DParser;
+import javastraw.reader.Dataset;
+import javastraw.reader.basics.Chromosome;
+import javastraw.reader.basics.ChromosomeHandler;
+import javastraw.reader.expected.ExpectedValueFunction;
+import javastraw.reader.mzd.MatrixZoomData;
+import javastraw.reader.type.HiCZoom;
+import javastraw.reader.type.NormalizationHandler;
+import javastraw.reader.type.NormalizationType;
+import javastraw.tools.HiCFileTools;
 import juicebox.HiCGlobals;
-import juicebox.data.*;
-import juicebox.data.basics.Chromosome;
 import juicebox.tools.clt.CommandLineParserForJuicer;
 import juicebox.tools.clt.JuicerCLT;
 import juicebox.tools.utils.juicer.arrowhead.ArrowheadScoreList;
 import juicebox.tools.utils.juicer.arrowhead.BlockBuster;
 import juicebox.tools.utils.juicer.hiccups.HiCCUPSUtils;
-import juicebox.track.feature.Feature2DList;
-import juicebox.track.feature.Feature2DParser;
-import juicebox.windowui.HiCZoom;
-import juicebox.windowui.NormalizationHandler;
-import juicebox.windowui.NormalizationType;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -117,7 +119,6 @@ public class Arrowhead extends JuicerCLT {
     public Arrowhead() {
         super("arrowhead [-c chromosome(s)] [-m matrix size] [-r resolution] [-k normalization (NONE/VC/VC_SQRT/KR)] " +
                 "<hicFile(s)> <output_file> [feature_list] [control_list]");
-        HiCGlobals.useCache = false;
     }
 
     public static String getBasicUsage() {
@@ -131,7 +132,7 @@ public class Arrowhead extends JuicerCLT {
             printUsageAndExit();  // this will exit
         }
 
-        ds = HiCFileTools.extractDatasetForCLT(Arrays.asList(args[1].split("\\+")), true);
+        ds = HiCFileTools.extractDatasetForCLT(args[1], true, false);
         outputDirectory = HiCFileTools.createValidDirectory(args[2]);
 
 
@@ -175,8 +176,9 @@ public class Arrowhead extends JuicerCLT {
     @Override
     public void run() {
         try {
-            final ExpectedValueFunction df = ds.getExpectedValues(new HiCZoom(HiC.Unit.BP, 2500000), NormalizationHandler.NONE);
-			double firstExpected = df.getExpectedValuesNoNormalization().getFirstValue(); // expected value on diagonal
+            final ExpectedValueFunction df = ds.getExpectedValues(new HiCZoom(HiCZoom.HiCUnit.BP, 2500000),
+                    NormalizationHandler.NONE, false);
+            double firstExpected = df.getExpectedValuesNoNormalization().getFirstValue(); // expected value on diagonal
             // From empirical testing, if the expected value on diagonal at 2.5Mb is >= 100,000
             // then the map had more than 300M contacts.
             if (firstExpected < 100000) {
@@ -229,7 +231,7 @@ public class Arrowhead extends JuicerCLT {
         if (givenChromosomes != null)
             chromosomeHandler = HiCFileTools.stringToChromosomes(givenChromosomes, chromosomeHandler);
 
-        final HiCZoom zoom = new HiCZoom(HiC.Unit.BP, resolution);
+        final HiCZoom zoom = new HiCZoom(HiCZoom.HiCUnit.BP, resolution);
 
         final double maxProgressStatus = determineHowManyChromosomesWillActuallyRun(ds, chromosomeHandler, zoom);
         if (maxProgressStatus < 1) {

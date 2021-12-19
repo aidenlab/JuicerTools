@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/JuicerTools</output-path>
     <root id="archive" name="juicer_tools.jar">
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/src/resources/manifests/juicer_tools_jar/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/resources/MANIFEST.MF" />
       </element>
       <element id="module-output" name="Juicebox" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/jcuda/jcuda-0.8.0.jar" path-in-jar="/" />
@@ -12,6 +12,7 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/jcuda/jcuda-natives-0.8.0-linux-ppc_64.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/jcuda/jcuda-natives-0.8.0-linux-x86_64.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/general/jargs.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/general/java-straw.1.8.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/broadinstitute/igv.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/broadinstitute/htsjdk-1.139.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/broadinstitute/log4j-core-2.11.0.jar" path-in-jar="/" />

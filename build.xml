@@ -2,7 +2,7 @@
 <!--
   ~ The MIT License (MIT)
   ~
-  ~ Copyright (c) 2011-2020 Broad Institute, Aiden Lab, Rice University, Baylor College of Medicine
+  ~ Copyright (c) 2011-2021 Broad Institute, Aiden Lab, Rice University, Baylor College of Medicine
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -16,7 +16,7 @@
   ~
   ~  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
   ~  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  ~  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
   ~  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
   ~  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
   ~  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -331,8 +331,8 @@
         <property name="artifact.temp.output.juicer_tools:jar" value="${artifacts.temp.dir}/juicer_tools_jar"/>
         <mkdir dir="${artifact.temp.output.juicer_tools:jar}"/>
         <jar destfile="${temp.jar.path.juicer_tools.jar}" duplicate="preserve"
-             manifest="${basedir}/src/resources/manifests/juicer_tools_jar/META-INF/MANIFEST.MF">
-            <zipfileset file="${basedir}/src/resources/manifests/juicer_tools_jar/META-INF/MANIFEST.MF"
+             manifest="/resources/MANIFEST.MF">
+            <zipfileset file="/resources/MANIFEST.MF"
                         prefix="META-INF"/>
             <zipfileset dir="${juicebox.output.dir}"/>
             <zipfileset src="${basedir}/lib/general/jsi1.1.jar" excludes="META-INF/*.SF,META-INF/*.DSA,META-INF/*.RSA"/>

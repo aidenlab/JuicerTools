@@ -26,24 +26,23 @@ package juicebox.tools.clt.juicer;
 
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Floats;
-import juicebox.HiC;
+import javastraw.feature2D.Feature2D;
+import javastraw.feature2D.Feature2DList;
+import javastraw.reader.Dataset;
+import javastraw.reader.basics.Chromosome;
+import javastraw.reader.basics.ChromosomeHandler;
+import javastraw.reader.expected.ExpectedValueFunction;
+import javastraw.reader.type.HiCZoom;
+import javastraw.reader.type.NormalizationHandler;
+import javastraw.reader.type.NormalizationType;
+import javastraw.tools.HiCFileTools;
 import juicebox.HiCGlobals;
-import juicebox.data.ChromosomeHandler;
-import juicebox.data.Dataset;
-import juicebox.data.ExpectedValueFunction;
-import juicebox.data.HiCFileTools;
-import juicebox.data.basics.Chromosome;
-import juicebox.mapcolorui.Feature2DHandler;
+import juicebox.data.Feature2DHandler;
+import juicebox.data.Feature2DTools;
 import juicebox.tools.clt.CommandLineParserForJuicer;
 import juicebox.tools.clt.JuicerCLT;
 import juicebox.tools.utils.common.ArrayTools;
 import juicebox.tools.utils.juicer.hiccups.*;
-import juicebox.track.feature.Feature2D;
-import juicebox.track.feature.Feature2DList;
-import juicebox.track.feature.Feature2DTools;
-import juicebox.windowui.HiCZoom;
-import juicebox.windowui.NormalizationHandler;
-import juicebox.windowui.NormalizationType;
 
 import java.awt.*;
 import java.io.File;
@@ -206,7 +205,6 @@ public class HiCCUPS extends JuicerCLT {
                 "[-c chromosome(s)] [-r resolution(s)] [--restrict] " +
                 "[-f fdr] [-p peak width] [-i window] [-t thresholds] [-d centroid distances] " +
                 "<hicFile> <outputDirectory> [specified_loop_list]");
-        Feature2D.allowHiCCUPSOrdering = true;
     }
 
     public static String getBasicUsage() {
@@ -220,7 +218,7 @@ public class HiCCUPS extends JuicerCLT {
         }
         // TODO: add code here to check for CUDA/GPU installation. The below is not ideal.
 
-        ds = HiCFileTools.extractDatasetForCLT(Arrays.asList(args[1].split("\\+")), true);
+        ds = HiCFileTools.extractDatasetForCLT(args[1], true, false);
         outputDirectory = HiCFileTools.createValidDirectory(args[2]);
 
         if (args.length == 4) {
@@ -301,7 +299,8 @@ public class HiCCUPS extends JuicerCLT {
     public void run() {
 
         try {
-            final ExpectedValueFunction df = ds.getExpectedValues(new HiCZoom(HiC.Unit.BP, 2500000), NormalizationHandler.NONE);
+            final ExpectedValueFunction df = ds.getExpectedValues(new HiCZoom(HiCZoom.HiCUnit.BP, 2500000),
+                    NormalizationHandler.NONE, false);
             double firstExpected = df.getExpectedValuesNoNormalization().getFirstValue(); // expected value on diagonal
             // From empirical testing, if the expected value on diagonal at 2.5Mb is >= 100,000
             // then the map had more than 300M contacts.
@@ -397,7 +396,6 @@ public class HiCCUPS extends JuicerCLT {
 
 
         // two runs, 1st to build histograms, 2nd to identify loops
-
         final HiCCUPSRegionHandler regionHandler = new HiCCUPSRegionHandler(ds, chromosomeHandler, zoom, norm, conf, regionWidth,
                 regionMargin, restrictSearchRegions);
 

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2011-2020 Broad Institute, Aiden Lab, Rice University, Baylor College of Medicine
+ * Copyright (c) 2011-2021 Broad Institute, Aiden Lab, Rice University, Baylor College of Medicine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -15,7 +15,7 @@
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -24,16 +24,19 @@
 
 package juicebox.tools.utils.juicer.hiccups;
 
+import javastraw.feature2D.Feature2D;
+import javastraw.feature2D.Feature2DList;
+import javastraw.feature2D.Feature2DParser;
+import javastraw.reader.Dataset;
+import javastraw.reader.basics.Chromosome;
+import javastraw.reader.basics.ChromosomeHandler;
+import javastraw.reader.norm.NormalizationVector;
+import javastraw.reader.type.NormalizationType;
+import javastraw.tools.HiCFileTools;
 import juicebox.HiCGlobals;
-import juicebox.data.ChromosomeHandler;
-import juicebox.data.Dataset;
-import juicebox.data.HiCFileTools;
-import juicebox.data.NormalizationVector;
-import juicebox.data.basics.Chromosome;
+import juicebox.data.Feature2DTools;
 import juicebox.tools.clt.juicer.HiCCUPS;
 import juicebox.tools.utils.common.ArrayTools;
-import juicebox.track.feature.*;
-import juicebox.windowui.NormalizationType;
 
 import java.awt.*;
 import java.io.File;
@@ -144,38 +147,25 @@ public class HiCCUPSUtils {
         if (HiCGlobals.printVerboseComments) {
             System.out.println("Initial: " + list.getNumTotalFeatures());
         }
-        list.filterLists(new FeatureFilter() {
-            @Override
-            public List<Feature2D> filter(String chr, List<Feature2D> feature2DList) {
-                try {
-                    return removeLowMapQ(resolution, chrNameToIndex.get(chr), ds, feature2DList, norm);
-                } catch (Exception e) {
-                    System.err.println("Unable to remove low mapQ entries for " + chr);
-                    //e.printStackTrace();
-                }
-                return new ArrayList<>();
+        list.filterLists((chr, feature2DList) -> {
+            try {
+                return removeLowMapQ(resolution, chrNameToIndex.get(chr), ds, feature2DList, norm);
+            } catch (Exception e) {
+                System.err.println("Unable to remove low mapQ entries for " + chr);
+                //e.printStackTrace();
             }
+            return new ArrayList<>();
         });
 
 
     }
 
     private static void coalesceFeaturesToCentroid(Feature2DList list, final int resolution, final int centroidRadius) {
-        list.filterLists(new FeatureFilter() {
-            @Override
-            public List<Feature2D> filter(String chr, List<Feature2D> feature2DList) {
-                return coalescePixelsToCentroid(resolution, feature2DList, centroidRadius);
-            }
-        });
+        list.filterLists((chr, feature2DList) -> coalescePixelsToCentroid(resolution, feature2DList, centroidRadius));
     }
 
     public static void filterOutFeaturesByEnrichment(Feature2DList list, final float maxEnrich) {
-        list.filterLists(new FeatureFilter() {
-            @Override
-            public List<Feature2D> filter(String chr, List<Feature2D> feature2DList) {
-                return enrichmentThreshold(feature2DList, maxEnrich);
-            }
-        });
+        list.filterLists((chr, feature2DList) -> enrichmentThreshold(feature2DList, maxEnrich));
     }
 
     private static List<Feature2D> enrichmentThreshold(List<Feature2D> feature2DList, final float maxEnrich) {
@@ -188,12 +178,7 @@ public class HiCCUPSUtils {
     }
 
     private static void filterOutFeaturesByFDR(Feature2DList list) {
-        list.filterLists(new FeatureFilter() {
-            @Override
-            public List<Feature2D> filter(String chr, List<Feature2D> feature2DList) {
-                return fdrThreshold(feature2DList);
-            }
-        });
+        list.filterLists((chr, feature2DList) -> fdrThreshold(feature2DList));
     }
 
     private static List<Feature2D> fdrThreshold(List<Feature2D> feature2DList) {
@@ -244,16 +229,25 @@ public class HiCCUPSUtils {
         List<Feature2D> coalesced = new ArrayList<>();
 
         while (!featureLL.isEmpty()) {
-    
+
             // See Feature2D
-            Collections.sort(featureLL);
+            Collections.sort(featureLL, (o1, o2) -> {
+                if (o1.hasAttributeKey(HiCCUPSUtils.OBSERVED)
+                        && o2.hasAttributeKey(HiCCUPSUtils.OBSERVED)) {
+                    float val = Float.parseFloat(o1.getAttribute(HiCCUPSUtils.OBSERVED))
+                            - Float.parseFloat(o2.getAttribute(HiCCUPSUtils.OBSERVED));
+                    if (val > 0) return 1;
+                    if (val < 0) return -1;
+                }
+                return o1.compareTo(o2);
+            });
             Collections.reverse(featureLL);
-    
+
             Feature2D pixel = featureLL.pollFirst();
             featureLL.remove(pixel);
             List<Feature2D> pixelList = new ArrayList<>();
             pixelList.add(pixel);
-    
+
             int pixelListX = (int) pixel.getStart1();
             int pixelListY = (int) pixel.getStart2();
             double r = 0;

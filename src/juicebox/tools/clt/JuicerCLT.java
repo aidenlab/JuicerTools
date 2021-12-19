@@ -24,13 +24,15 @@
 
 package juicebox.tools.clt;
 
-import juicebox.data.ChromosomeHandler;
-import juicebox.data.Dataset;
-import juicebox.data.Matrix;
-import juicebox.data.basics.Chromosome;
-import juicebox.windowui.HiCZoom;
-import juicebox.windowui.NormalizationHandler;
-import juicebox.windowui.NormalizationType;
+
+import javastraw.reader.Dataset;
+import javastraw.reader.Matrix;
+import javastraw.reader.basics.Chromosome;
+import javastraw.reader.basics.ChromosomeHandler;
+import javastraw.reader.type.HiCZoom;
+import javastraw.reader.type.NormalizationHandler;
+import javastraw.reader.type.NormalizationType;
+import javastraw.tools.HiCFileTools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +40,30 @@ import java.util.List;
 /**
  * Created by muhammadsaadshamim on 9/21/15.
  */
-public abstract class JuicerCLT extends JuiceboxCLT {
+public abstract class JuicerCLT {
 
+    protected static int numCPUThreads = 1;
+    private static String usage;
+    protected Dataset dataset = null;
     protected NormalizationType norm = NormalizationHandler.SCALE;
     protected List<String> givenChromosomes = null; //TODO set to protected
 
     protected JuicerCLT(String usage) {
-        super(usage);
+        setUsage(usage);
+    }
+
+    public static String[] splitToList(String nextLine) {
+        return nextLine.trim().split("\\s+");
+    }
+
+    public static int getAppropriateNumberOfThreads(int numThreads, int defaultNum) {
+        if (numThreads > 0) {
+            return numThreads;
+        } else if (numThreads < 0) {
+            return Math.abs(numThreads) * Runtime.getRuntime().availableProcessors();
+        } else {
+            return defaultNum;
+        }
     }
 
     protected int determineHowManyChromosomesWillActuallyRun(Dataset ds, ChromosomeHandler chromosomeHandler, HiCZoom zoom) {
@@ -58,7 +77,6 @@ public abstract class JuicerCLT extends JuiceboxCLT {
         return maxProgressStatus;
     }
 
-    @Override
     public void readArguments(String[] args, CommandLineParser parser) {
         CommandLineParserForJuicer juicerParser = (CommandLineParserForJuicer)parser;
         assessIfChromosomesHaveBeenSpecified(juicerParser);
@@ -72,5 +90,44 @@ public abstract class JuicerCLT extends JuiceboxCLT {
         if (possibleChromosomes != null && possibleChromosomes.size() > 0) {
             givenChromosomes = new ArrayList<>(possibleChromosomes);
         }
+    }
+
+    public String getUsage() {
+        return usage;
+    }
+
+    private void setUsage(String newUsage) {
+        usage = newUsage;
+    }
+
+    public abstract void run();
+
+    public void printUsageAndExit() {
+        System.out.println("Usage:   juicer_tools " + usage);
+        System.exit(0);
+    }
+
+    public void printUsageAndExit(int exitcode) {
+        System.out.println("Usage:   juicer_tools " + usage);
+        System.exit(exitcode);
+    }
+
+    protected void setDatasetAndNorm(String files, String normType, boolean allowPrinting) {
+        dataset = HiCFileTools.extractDatasetForCLT(files,
+                allowPrinting, false);
+
+        norm = dataset.getNormalizationHandler().getNormTypeFromString(normType);
+        if (norm == null) {
+            System.err.println("Normalization type " + norm + " unrecognized.  Normalization type must be one of \n" +
+                    "\"NONE\", \"VC\", \"VC_SQRT\", \"KR\", \"GW_KR\"," +
+                    " \"GW_VC\", \"INTER_KR\", \"INTER_VC\", or a custom added normalization.");
+            System.exit(16);
+        }
+    }
+
+    protected void updateNumberOfCPUThreads(CommandLineParser parser, int numDefaultThreads) {
+        int numThreads = parser.getNumThreads();
+        numCPUThreads = getAppropriateNumberOfThreads(numThreads, numDefaultThreads);
+        System.out.println("Using " + numCPUThreads + " CPU thread(s) for primary task");
     }
 }

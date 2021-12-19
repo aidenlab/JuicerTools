@@ -24,8 +24,8 @@
 
 package juicebox.tools.clt;
 
-import juicebox.windowui.NormalizationHandler;
-import juicebox.windowui.NormalizationType;
+import javastraw.reader.type.NormalizationHandler;
+import javastraw.reader.type.NormalizationType;
 
 import java.util.List;
 

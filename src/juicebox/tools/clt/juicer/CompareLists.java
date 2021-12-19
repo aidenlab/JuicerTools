@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2011-2020 Broad Institute, Aiden Lab, Rice University, Baylor College of Medicine
+ * Copyright (c) 2011-2021 Broad Institute, Aiden Lab, Rice University, Baylor College of Medicine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -15,7 +15,7 @@
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -24,13 +24,17 @@
 
 package juicebox.tools.clt.juicer;
 
-import juicebox.HiCGlobals;
-import juicebox.data.ChromosomeHandler;
-import juicebox.data.HiCFileTools;
-import juicebox.data.anchor.MotifAnchorTools;
+import javastraw.feature2D.Feature2D;
+import javastraw.feature2D.Feature2DList;
+import javastraw.feature2D.Feature2DParser;
+import javastraw.reader.basics.ChromosomeHandler;
+import javastraw.reader.basics.ChromosomeTools;
+import javastraw.tools.HiCFileTools;
+import juicebox.data.Feature2DTools;
+import juicebox.data.Feature2DWithMotif;
+import juicebox.data.MotifAnchorTools;
 import juicebox.tools.clt.CommandLineParserForJuicer;
 import juicebox.tools.clt.JuicerCLT;
-import juicebox.track.feature.*;
 
 import java.awt.*;
 import java.io.File;
@@ -57,7 +61,6 @@ public class CompareLists extends JuicerCLT {
                 "comparetype:   0 - overlap/intersect within distance threshold\n" +
                 "               1 - comparison with ctcf motifs\n" +
                 "               2 - convergence calculation for list1 with ctcf motifs");
-        HiCGlobals.useCache = false;
     }
 
     @Override
@@ -92,7 +95,7 @@ public class CompareLists extends JuicerCLT {
     @Override
     public void run() {
 
-        ChromosomeHandler handler = HiCFileTools.loadChromosomes(genomeID);
+        ChromosomeHandler handler = ChromosomeTools.loadChromosomes(genomeID);
         if (givenChromosomes != null)
             handler = HiCFileTools.stringToChromosomes(givenChromosomes, handler);
 
