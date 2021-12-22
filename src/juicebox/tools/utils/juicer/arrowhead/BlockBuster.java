@@ -32,7 +32,7 @@ import javastraw.tools.HiCFileTools;
 import juicebox.HiCGlobals;
 import juicebox.tools.utils.common.MatrixTools;
 import juicebox.track.feature.JuicerToolsFeature2DParser;
-import org.apache.commons.math.linear.RealMatrix;
+import org.apache.commons.math3.linear.RealMatrix;
 
 import java.io.IOException;
 import java.util.*;

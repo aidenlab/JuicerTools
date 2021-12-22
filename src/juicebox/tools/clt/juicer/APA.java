@@ -41,7 +41,7 @@ import juicebox.tools.clt.JuicerCLT;
 import juicebox.tools.utils.juicer.apa.APADataStack;
 import juicebox.tools.utils.juicer.apa.APARegionStatistics;
 import juicebox.tools.utils.juicer.apa.APAUtils;
-import org.apache.commons.math.linear.RealMatrix;
+import org.apache.commons.math3.linear.RealMatrix;
 
 import java.io.File;
 import java.util.*;

@@ -38,7 +38,7 @@ import jcuda.utils.KernelLauncher;
 import juicebox.tools.clt.juicer.HiCCUPS;
 import juicebox.tools.utils.common.ArrayTools;
 import juicebox.tools.utils.common.MatrixTools;
-import org.apache.commons.math.linear.RealMatrix;
+import org.apache.commons.math3.linear.RealMatrix;
 
 import java.io.BufferedReader;
 import java.io.IOException;

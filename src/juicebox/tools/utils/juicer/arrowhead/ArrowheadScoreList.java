@@ -28,7 +28,7 @@ import javastraw.feature2D.Feature2D;
 import javastraw.feature2D.Feature2DList;
 import javastraw.reader.basics.Chromosome;
 import juicebox.tools.utils.common.MatrixTools;
-import org.apache.commons.math.linear.RealMatrix;
+import org.apache.commons.math3.linear.RealMatrix;
 
 import java.util.ArrayList;
 import java.util.List;

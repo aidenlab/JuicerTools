@@ -31,8 +31,8 @@ import javastraw.reader.type.NormalizationType;
 import javastraw.tools.HiCFileTools;
 import juicebox.tools.utils.common.MatrixTools;
 import juicebox.tools.utils.common.StatPercentile;
-import org.apache.commons.math.linear.Array2DRowRealMatrix;
-import org.apache.commons.math.linear.RealMatrix;
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import org.apache.commons.math3.linear.RealMatrix;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
